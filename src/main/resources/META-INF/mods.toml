@@ -13,7 +13,7 @@ displayURL = "https://modrinth.com/project/damagenumbers"
 logoFile = "assets/damagenumbers/icon.png"
 
 authors = "luavixen <lua@foxgirl.dev> (https://foxgirl.dev/)"
-description = "Adds simple damage number particles."
+description = "Adds simple damage number particles when any entity takes damage."
 
 [[dependencies.damagenumbers]]
 modId = "forge"

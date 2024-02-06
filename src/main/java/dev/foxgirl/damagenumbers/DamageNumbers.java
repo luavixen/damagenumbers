@@ -4,6 +4,7 @@ import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
+import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -70,6 +71,13 @@ public final class DamageNumbers {
                 .title(Text.of("Damage Numbers"))
                 .category(ConfigCategory.createBuilder()
                         .name(Text.of("Damage Numbers"))
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.of("Enabled"))
+                                .description(OptionDescription.of(Text.of("Whether or not to display damage numbers.")))
+                                .binding(configDefault.optionGetEnabled(), config::optionGetEnabled, config::optionSetEnabled)
+                                .controller(BooleanControllerBuilder::create)
+                                .build()
+                        )
                         .option(Option.<java.awt.Color>createBuilder()
                                 .name(Text.of("Small Damage Color"))
                                 .description(OptionDescription.of(Text.of("Color used for small amounts of damage. (below 2 damage, mixed up to 8)")))
@@ -99,6 +107,8 @@ public final class DamageNumbers {
     }
 
     public void onEntityHealthChange(@NotNull LivingEntity entity, float oldHealth, float newHealth) {
+        if (!config.isEnabled) return;
+
         float damage = oldHealth - newHealth;
         if (damage <= 0.0F) return;
 

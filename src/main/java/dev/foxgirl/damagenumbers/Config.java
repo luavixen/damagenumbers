@@ -13,11 +13,20 @@ import java.nio.file.StandardCopyOption;
 
 public final class Config {
 
+    public boolean isEnabled = true;
+
     public Color colorSm = Color.valueOf("#FFAA00");
     public Color colorMd = Color.valueOf("#FF0000");
     public Color colorLg = Color.valueOf("#AA0000");
 
     public Config() {}
+
+    public boolean optionGetEnabled() {
+        return isEnabled;
+    }
+    public void optionSetEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
 
     public @NotNull java.awt.Color optionGetColorSm() {
         return colorSm.toNativeColor();
@@ -49,6 +58,7 @@ public final class Config {
 
     public @NotNull String toJson() {
         var json = new JsonObject();
+        json.addProperty("isEnabled", isEnabled);
         json.addProperty("colorSm", colorSm.toString());
         json.addProperty("colorMd", colorMd.toString());
         json.addProperty("colorLg", colorLg.toString());
@@ -56,11 +66,12 @@ public final class Config {
     }
 
     public void fromJson(@NotNull JsonObject json) {
-        json.entrySet().forEach(e -> {
-            switch (e.getKey()) {
-                case "colorSm" -> colorSm = Color.valueOf(e.getValue().getAsString());
-                case "colorMd" -> colorMd = Color.valueOf(e.getValue().getAsString());
-                case "colorLg" -> colorLg = Color.valueOf(e.getValue().getAsString());
+        json.entrySet().forEach(entry -> {
+            switch (entry.getKey()) {
+                case "isEnabled" -> isEnabled = entry.getValue().getAsBoolean();
+                case "colorSm" -> colorSm = Color.valueOf(entry.getValue().getAsString());
+                case "colorMd" -> colorMd = Color.valueOf(entry.getValue().getAsString());
+                case "colorLg" -> colorLg = Color.valueOf(entry.getValue().getAsString());
             }
         });
     }

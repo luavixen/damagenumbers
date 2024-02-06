@@ -104,6 +104,8 @@ public final class DamageNumbers {
 
         var client = getClient();
 
+        if (entity == client.player) return;
+
         var world = client.world;
         if (world == null || world != entity.getWorld()) return;
 

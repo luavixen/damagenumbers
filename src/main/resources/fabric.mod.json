@@ -12,7 +12,8 @@
     },
 
     "name": "Damage Numbers",
-    "description": "Adds simple damage number particles.",
+    "description": "Adds simple damage number particles when any entity takes damage.",
+
     "icon": "assets/damagenumbers/icon.png",
 
     "license": "UNLICENSED",

@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.5.7'
+    id 'dev.architectury.loom' version '1.5.388'
 }
 
 group = project.mod_group
@@ -7,7 +7,20 @@ archivesBaseName = project.mod_name
 
 version = project.mod_version
 
+loom {
+    forge {
+        mixinConfig 'damagenumbers.mixins.json'
+    }
+    runs {
+        data {
+            data()
+            programArgs '--existing', file('src/main/resources').absolutePath
+        }
+    }
+}
+
 repositories {
+    mavenCentral()
     maven {
         name 'Xander Maven'
         url 'https://maven.isxander.dev/releases'
@@ -18,12 +31,12 @@ repositories {
     }
 }
 
+
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_version}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "dev.isxander.yacl:yet-another-config-lib-fabric:${project.yacl_version}"
-    modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
+    forge "net.minecraftforge:forge:${project.forge_version}"
+    modImplementation "dev.isxander.yacl:yet-another-config-lib-forge:${project.yacl_forge_version}"
 }
 
 java {
@@ -37,7 +50,21 @@ compileJava {
 }
 
 processResources {
-    filesMatching('fabric.mod.json') {
+    filesMatching("META-INF/mods.toml") {
         expand 'version': version
+    }
+}
+
+jar {
+    manifest {
+        attributes([
+            'Specification-Title'     : project.mod_name,
+            'Specification-Vendor'    : 'luavixen',
+            'Specification-Version'   : '1',
+            'Implementation-Title'    : 'Damage Numbers',
+            'Implementation-Version'  : project.mod_version,
+            'Implementation-Vendor'   : 'luavixen',
+            'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
     }
 }

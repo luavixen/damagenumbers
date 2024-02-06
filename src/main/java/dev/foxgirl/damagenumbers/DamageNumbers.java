@@ -5,13 +5,17 @@ import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +23,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 
-public final class DamageNumbers implements ClientModInitializer {
+@Mod("damagenumbers")
+public final class DamageNumbers {
 
     public static @NotNull Logger LOGGER = LogManager.getLogger();
 
@@ -35,6 +40,12 @@ public final class DamageNumbers implements ClientModInitializer {
 
     public DamageNumbers() {
         INSTANCE = this;
+
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onCommonSetup);
+        ModLoadingContext.get().registerExtensionPoint(
+            ConfigScreenHandler.ConfigScreenFactory.class,
+            () -> new ConfigScreenHandler.ConfigScreenFactory((client, parent) -> createConfigScreen(parent))
+        );
     }
 
     public final @NotNull Config config = new Config();
@@ -49,9 +60,8 @@ public final class DamageNumbers implements ClientModInitializer {
         return configDirPath.resolve("damagenumbers.json.tmp");
     }
 
-    @Override
-    public void onInitializeClient() {
-        configDirPath = FabricLoader.getInstance().getConfigDir();
+    public void onCommonSetup(FMLCommonSetupEvent event) {
+        configDirPath = FMLPaths.CONFIGDIR.get();
         config.readConfig();
     }
 

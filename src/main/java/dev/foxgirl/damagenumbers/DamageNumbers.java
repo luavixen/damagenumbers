@@ -94,6 +94,8 @@ public final class DamageNumbers implements ClientModInitializer {
 
         var client = getClient();
 
+        if (entity == client.player) return;
+
         var world = client.world;
         if (world == null || world != entity.getWorld()) return;
 

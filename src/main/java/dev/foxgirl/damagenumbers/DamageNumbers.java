@@ -111,11 +111,12 @@ public final class DamageNumbers implements ClientModInitializer {
 
         var particle = new DamageNumberParticle(world, particlePos, particleVelocity);
 
-        if (damage % 1.0F == 0.0F) {
-            particle.setText(String.format("%.0f", damage));
-        } else {
-            particle.setText(String.format("%.1f", damage));
+        var text = String.format("%.1f", damage);
+        if (text.endsWith(".0")) {
+            text = text.substring(0, text.length() - 2);
         }
+
+        particle.setText(text);
 
         if (damage >= 16.0F) {
             particle.setColor(config.colorLg);

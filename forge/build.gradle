@@ -1,0 +1,72 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+version = rootProject.mod_version + "-forge"
+
+architectury {
+    platformSetupLoomIde()
+    forge()
+}
+
+loom {
+    forge {
+        mixinConfig 'damagenumbers.mixins.json'
+    }
+}
+
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin since it *excludes* files.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentForge.extendsFrom common
+}
+
+dependencies {
+    forge "net.minecraftforge:forge:${rootProject.forge_version}"
+    modImplementation "dev.isxander.yacl:yet-another-config-lib-forge:${rootProject.yacl_version}"
+
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
+}
+
+processResources {
+    filesMatching("META-INF/mods.toml") {
+        expand 'version': version
+    }
+}
+
+jar {
+    manifest {
+        attributes([
+            'Specification-Title'     : rootProject.mod_name,
+            'Specification-Vendor'    : 'luavixen',
+            'Specification-Version'   : '1',
+            'Implementation-Title'    : 'Damage Numbers',
+            'Implementation-Version'  : rootProject.mod_version,
+            'Implementation-Vendor'   : 'luavixen',
+            'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+shadowJar {
+    exclude "fabric.mod.json"
+    exclude "architectury.common.json"
+
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier = "dev-shadow"
+}
+
+remapJar {
+    injectAccessWidener = true
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}

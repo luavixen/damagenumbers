@@ -29,7 +29,7 @@
 
     "entrypoints": {
         "client": [
-            "dev.foxgirl.damagenumbers.DamageNumbers"
+            "dev.foxgirl.damagenumbers.DamageNumbersInitializer"
         ],
         "modmenu": [
             "dev.foxgirl.damagenumbers.DamageNumbersModMenuIntegration"

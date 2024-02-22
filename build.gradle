@@ -1,43 +1,54 @@
 plugins {
-    id 'fabric-loom' version '1.5.7'
+    id 'architectury-plugin' version '3.4.151'
+    id 'dev.architectury.loom' version '1.5.388' apply false
 }
 
 group = project.mod_group
-archivesBaseName = project.mod_name
-
 version = project.mod_version
 
-repositories {
-    maven {
-        name 'Xander Maven'
-        url 'https://maven.isxander.dev/releases'
+architectury {
+    minecraft = project.minecraft_version
+}
+
+subprojects {
+    apply plugin: "dev.architectury.loom"
+
+    dependencies {
+        minecraft "com.mojang:minecraft:${project.minecraft_version}"
+        mappings "net.fabricmc:yarn:${project.yarn_version}:v2"
+        modImplementation "dev.isxander.yacl:yet-another-config-lib-common:${project.yacl_version}"
     }
-    maven {
-        name 'TerraformersMC Maven'
-        url 'https://maven.terraformersmc.com/releases'
+}
+
+allprojects {
+    apply plugin: "java"
+    apply plugin: "architectury-plugin"
+
+    base {
+        archivesName = rootProject.mod_name
     }
-}
 
-dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_version}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "dev.isxander.yacl:yet-another-config-lib-fabric:${project.yacl_version}"
-    modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
-}
+    version = rootProject.mod_version
+    group = rootProject.mod_group
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
+    repositories {
+        maven {
+            name 'Xander Maven'
+            url 'https://maven.isxander.dev/releases'
+        }
+        maven {
+            name 'TerraformersMC Maven'
+            url 'https://maven.terraformersmc.com/releases'
+        }
+    }
 
-compileJava {
-    options.release = 17
-    options.encoding = 'UTF-8'
-}
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 
-processResources {
-    filesMatching('fabric.mod.json') {
-        expand 'version': version
+    compileJava {
+        options.release = 17
+        options.encoding = 'UTF-8'
     }
 }

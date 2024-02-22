@@ -4,7 +4,21 @@ pluginManagement {
             name = 'Fabric'
             url = uri 'https://maven.fabricmc.net/'
         }
+        maven {
+            name = 'Forge'
+            url = 'https://files.minecraftforge.net/maven/'
+        }
+        maven {
+            name = 'Architectury'
+            url = 'https://maven.architectury.dev/'
+        }
         mavenCentral()
         gradlePluginPortal()
     }
 }
+
+rootProject.name = "damagenumbers"
+
+include("common")
+include("fabric")
+include("forge")

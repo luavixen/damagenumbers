@@ -1,0 +1,37 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+
+license = "UNLICENSED"
+
+[[mods]]
+modId = "damagenumbers"
+version = "${version}"
+
+displayName = "Damage Numbers"
+displayURL = "https://modrinth.com/project/damagenumbers"
+
+logoFile = "assets/damagenumbers/icon.png"
+
+authors = "luavixen <lua@foxgirl.dev> (https://foxgirl.dev/)"
+description = "Adds simple damage number particles when any entity takes damage."
+
+[[dependencies.damagenumbers]]
+modId = "forge"
+mandatory = true
+versionRange = "[41,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.damagenumbers]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.19,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.damagenumbers]]
+modId = "yet_another_config_lib_v3"
+mandatory = true
+versionRange = "[1,)"
+ordering = "NONE"
+side = "CLIENT"

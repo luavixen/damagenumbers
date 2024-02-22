@@ -15,6 +15,9 @@ logoFile = "assets/damagenumbers/icon.png"
 authors = "luavixen <lua@foxgirl.dev> (https://foxgirl.dev/)"
 description = "Adds simple damage number particles when any entity takes damage."
 
+[[mixins]]
+config = "damagenumbers.mixins.json"
+
 [[dependencies.damagenumbers]]
 modId = "forge"
 mandatory = true

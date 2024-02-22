@@ -1,4 +1,4 @@
-package dev.foxgirl.damagenumbers;
+package dev.foxgirl.damagenumbers.client;
 
 import org.jetbrains.annotations.NotNull;
 

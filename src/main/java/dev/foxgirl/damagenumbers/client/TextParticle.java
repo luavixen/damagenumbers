@@ -1,5 +1,6 @@
-package dev.foxgirl.damagenumbers;
+package dev.foxgirl.damagenumbers.client;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleTextureSheet;
@@ -12,11 +13,11 @@ import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
-public final class DamageNumberParticle extends Particle {
+public final class TextParticle extends Particle {
 
     private String text;
 
-    public DamageNumberParticle(ClientWorld world, Vec3d pos, Vec3d velocity) {
+    public TextParticle(ClientWorld world, Vec3d pos, Vec3d velocity) {
         super(world, pos.x, pos.y, pos.z, velocity.x, velocity.y, velocity.z);
         velocityMultiplier = 0.99F;
         gravityStrength = 0.75F;
@@ -52,7 +53,7 @@ public final class DamageNumberParticle extends Particle {
         matrix = matrix.rotate(camera.getRotation());
         matrix = matrix.scale(-0.025F, -0.025F, 0.025F);
 
-        var textRenderer = DamageNumbers.getClient().textRenderer;
+        var textRenderer = MinecraftClient.getInstance().textRenderer;
         var vertexConsumers = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
 
         float textX = textRenderer.getWidth(text) / -2.0F;

@@ -1,19 +1,23 @@
-package dev.foxgirl.damagenumbers;
+package dev.foxgirl.damagenumbers.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import dev.foxgirl.damagenumbers.DamageNumbers;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 public final class Config {
 
     public boolean isEnabled = true;
+
+    public boolean isPlayerDamageShown = false;
 
     public Color colorSm = Color.valueOf("#FFAA00");
     public Color colorMd = Color.valueOf("#FF0000");
@@ -26,6 +30,13 @@ public final class Config {
     }
     public void optionSetEnabled(boolean enabled) {
         isEnabled = enabled;
+    }
+
+    public boolean optionGetPlayerDamageShown() {
+        return isPlayerDamageShown;
+    }
+    public void optionSetPlayerDamageShown(boolean shown) {
+        isPlayerDamageShown = shown;
     }
 
     public @NotNull java.awt.Color optionGetColorSm() {
@@ -59,6 +70,7 @@ public final class Config {
     public @NotNull String toJson() {
         var json = new JsonObject();
         json.addProperty("isEnabled", isEnabled);
+        json.addProperty("isPlayerDamageShown", isPlayerDamageShown);
         json.addProperty("colorSm", colorSm.toString());
         json.addProperty("colorMd", colorMd.toString());
         json.addProperty("colorLg", colorLg.toString());
@@ -69,6 +81,7 @@ public final class Config {
         json.entrySet().forEach(entry -> {
             switch (entry.getKey()) {
                 case "isEnabled" -> isEnabled = entry.getValue().getAsBoolean();
+                case "isPlayerDamageShown" -> isPlayerDamageShown = entry.getValue().getAsBoolean();
                 case "colorSm" -> colorSm = Color.valueOf(entry.getValue().getAsString());
                 case "colorMd" -> colorMd = Color.valueOf(entry.getValue().getAsString());
                 case "colorLg" -> colorLg = Color.valueOf(entry.getValue().getAsString());
@@ -76,12 +89,17 @@ public final class Config {
         });
     }
 
-    public void readConfig() {
+    public interface PathProvider {
+        @NotNull Path getConfigFilePath();
+        @NotNull Path getConfigTempPath();
+    }
+
+    public void readConfig(@NotNull PathProvider paths) {
         try {
-            fromJson(GSON.fromJson(Files.newBufferedReader(DamageNumbers.getInstance().configFilePath()), JsonObject.class));
+            fromJson(GSON.fromJson(Files.newBufferedReader(paths.getConfigFilePath()), JsonObject.class));
         } catch (NoSuchFileException cause) {
             DamageNumbers.LOGGER.error("Failed to read config, file not found, creating config");
-            writeConfig();
+            writeConfig(paths);
         } catch (IOException cause) {
             DamageNumbers.LOGGER.error("Failed to read config, IO error", cause);
         } catch (JsonParseException cause) {
@@ -91,10 +109,10 @@ public final class Config {
         }
     }
 
-    public void writeConfig() {
+    public void writeConfig(@NotNull PathProvider paths) {
         try {
-            var pathFile = DamageNumbers.getInstance().configFilePath();
-            var pathTemp = DamageNumbers.getInstance().configTempPath();
+            var pathFile = paths.getConfigFilePath();
+            var pathTemp = paths.getConfigTempPath();
             Files.writeString(pathTemp, toJson());
             Files.move(pathTemp, pathFile, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException cause) {

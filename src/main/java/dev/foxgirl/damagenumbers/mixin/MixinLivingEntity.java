@@ -27,7 +27,7 @@ public abstract class MixinLivingEntity {
         if (oldHealth != newHealth) {
             previousHealth = newHealth;
             DamageNumbers
-                .getInstance()
+                .getHandler()
                 .onEntityHealthChange(entity, oldHealth, newHealth);
         }
     }

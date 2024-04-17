@@ -34,7 +34,7 @@ side = "BOTH"
 
 [[dependencies.damagenumbers]]
 modId = "yet_another_config_lib_v3"
-mandatory = true
+mandatory = false
 versionRange = "[1,)"
 ordering = "NONE"
 side = "CLIENT"

@@ -1,12 +1,8 @@
 package dev.foxgirl.damagenumbers.client;
 
-import dev.isxander.yacl3.api.ConfigCategory;
-import dev.isxander.yacl3.api.Option;
-import dev.isxander.yacl3.api.OptionDescription;
-import dev.isxander.yacl3.api.YetAnotherConfigLib;
-import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
-import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
+import dev.foxgirl.damagenumbers.DamageNumbers;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.NoticeScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
@@ -38,50 +34,22 @@ public final class DamageNumbersImpl implements DamageNumbersHandler, Config.Pat
 
     @Override
     public @NotNull Screen createConfigScreen(@NotNull Screen parent) {
-        return YetAnotherConfigLib.createBuilder()
-            .title(Text.of("Damage Numbers"))
-            .category(ConfigCategory.createBuilder()
-                .name(Text.of("Damage Numbers"))
-                .option(Option.<Boolean>createBuilder()
-                    .name(Text.of("Enabled"))
-                    .description(OptionDescription.of(Text.of("Whether or not to display damage numbers.")))
-                    .binding(configDefault.optionGetEnabled(), config::optionGetEnabled, config::optionSetEnabled)
-                    .controller(BooleanControllerBuilder::create)
-                    .build()
-                )
-                .option(Option.<Boolean>createBuilder()
-                    .name(Text.of("Player Damage Shown"))
-                    .description(OptionDescription.of(Text.of("Whether or not to display damage numbers for the current player.")))
-                    .binding(configDefault.optionGetPlayerDamageShown(), config::optionGetPlayerDamageShown, config::optionSetPlayerDamageShown)
-                    .controller(BooleanControllerBuilder::create)
-                    .build()
-                )
-                .option(Option.<java.awt.Color>createBuilder()
-                    .name(Text.of("Small Damage Color"))
-                    .description(OptionDescription.of(Text.of("Color used for small amounts of damage. (below 2 damage, mixed up to 8)")))
-                    .binding(configDefault.optionGetColorSm(), config::optionGetColorSm, config::optionSetColorSm)
-                    .controller(ColorControllerBuilder::create)
-                    .build()
-                )
-                .option(Option.<java.awt.Color>createBuilder()
-                    .name(Text.of("Medium Damage Color"))
-                    .description(OptionDescription.of(Text.of("Color used for medium amounts of damage. (mixed between 2 and 16 damage)")))
-                    .binding(configDefault.optionGetColorMd(), config::optionGetColorMd, config::optionSetColorMd)
-                    .controller(ColorControllerBuilder::create)
-                    .build()
-                )
-                .option(Option.<java.awt.Color>createBuilder()
-                    .name(Text.of("Large Damage Color"))
-                    .description(OptionDescription.of(Text.of("Color used for large amounts of damage. (above 16 damage, mixed down to 8)")))
-                    .binding(configDefault.optionGetColorLg(), config::optionGetColorLg, config::optionSetColorLg)
-                    .controller(ColorControllerBuilder::create)
-                    .build()
-                )
-                .build()
-            )
-            .save(() -> config.writeConfig(this))
-            .build()
-            .generateScreen(parent);
+        try {
+            var factory = (ConfigScreenFactory) Class
+                .forName("dev.foxgirl.damagenumbers.client.ConfigScreenFactoryImpl")
+                .getConstructor(Config.class, Config.class, Config.PathProvider.class)
+                .newInstance(config, configDefault, this);
+            return factory.createConfigScreen(parent);
+        } catch (NoClassDefFoundError cause) {
+            DamageNumbers.LOGGER.error("Failed to create config screen due to missing class", cause);
+        } catch (ReflectiveOperationException cause) {
+            DamageNumbers.LOGGER.error("Failed to create config screen due to reflection error", cause);
+        }
+        return new NoticeScreen(
+            () -> MinecraftClient.getInstance().setScreen(parent),
+            Text.of("Config screen unavailable"),
+            Text.of("YACL3 (Yet Another Config Library 3) may not be installed.\nPlease install a supported version to use the Damage Numbers config screen.")
+        );
     }
 
     public void onEntityHealthChange(@NotNull LivingEntity entity, float oldHealth, float newHealth) {

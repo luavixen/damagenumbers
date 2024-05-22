@@ -1,24 +1,29 @@
 pluginManagement {
     repositories {
         maven {
-            name = 'Fabric'
-            url = uri 'https://maven.fabricmc.net/'
+            name 'Fabric Maven'
+            url 'https://maven.fabricmc.net/'
         }
         maven {
-            name = 'Forge'
-            url = 'https://files.minecraftforge.net/maven/'
+            name 'Forge Maven'
+            url 'https://files.minecraftforge.net/maven/'
         }
         maven {
-            name = 'Architectury'
-            url = 'https://maven.architectury.dev/'
+            name = 'NeoForged Maven'
+            url = 'https://maven.neoforged.net/releases/'
+        }
+        maven {
+            name 'Architectury Maven'
+            url 'https://maven.architectury.dev/'
         }
         mavenCentral()
         gradlePluginPortal()
     }
 }
 
-rootProject.name = "damagenumbers"
+rootProject.name = 'damagenumbers'
 
-include("common")
-include("fabric")
-include("forge")
+include 'common'
+include 'fabric'
+include 'forge'
+include 'neoforge'

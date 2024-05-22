@@ -54,15 +54,15 @@ public final class TextParticle extends Particle {
         matrix = matrix.scale(-0.025F, -0.025F, 0.025F);
 
         var textRenderer = MinecraftClient.getInstance().textRenderer;
-        var vertexConsumers = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
+        var vertexConsumerProvider = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
 
         float textX = textRenderer.getWidth(text) / -2.0F;
         float textY = 0.0F;
 
         int textColor = new Color(red, green, blue, alpha).getValue();
 
-        textRenderer.draw(text, textX, textY, textColor, false, matrix, vertexConsumers, TextRenderer.TextLayerType.NORMAL, 0, 0xF000F0);
-        vertexConsumers.draw();
+        textRenderer.draw(text, textX, textY, textColor, false, matrix, vertexConsumerProvider, TextRenderer.TextLayerType.NORMAL, 0, 0xF000F0);
+        vertexConsumerProvider.draw();
     }
 
 }

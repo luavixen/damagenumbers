@@ -19,22 +19,15 @@ description = "Adds simple damage number particles when any entity takes damage.
 config = "damagenumbers.mixins.json"
 
 [[dependencies.damagenumbers]]
-modId = "forge"
+modId = "neoforge"
 mandatory = true
-versionRange = "[41,)"
+versionRange = "[20.2,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.damagenumbers]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.4,)"
+versionRange = "[1.20,)"
 ordering = "NONE"
 side = "BOTH"
-
-[[dependencies.damagenumbers]]
-modId = "yet_another_config_lib_v3"
-mandatory = false
-versionRange = "[1,)"
-ordering = "NONE"
-side = "CLIENT"

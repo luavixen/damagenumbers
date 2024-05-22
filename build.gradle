@@ -1,6 +1,6 @@
 plugins {
-    id 'architectury-plugin' version '3.4.151'
-    id 'dev.architectury.loom' version '1.5.388' apply false
+    id 'architectury-plugin' version '3.4.155'
+    id 'dev.architectury.loom' version '1.6.397' apply false
 }
 
 group = project.mod_group
@@ -11,27 +11,51 @@ architectury {
 }
 
 subprojects {
-    apply plugin: "dev.architectury.loom"
+    apply plugin: 'dev.architectury.loom'
 
     dependencies {
         minecraft "com.mojang:minecraft:${project.minecraft_version}"
         mappings "net.fabricmc:yarn:${project.yarn_version}:v2"
+
         modImplementation "dev.isxander.yacl:yet-another-config-lib-common:${project.yacl_version}"
+    }
+
+    configurations.modImplementation {
+        exclude group: 'com.twelvemonkeys.common'
+        exclude group: 'com.twelvemonkeys.imageio'
+    }
+
+    jar {
+        manifest {
+            attributes([
+                'Specification-Title'     : rootProject.mod_name,
+                'Specification-Vendor'    : 'luavixen',
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : 'Damage Numbers',
+                'Implementation-Version'  : rootProject.mod_version,
+                'Implementation-Vendor'   : 'luavixen',
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+            ])
+        }
     }
 }
 
 allprojects {
-    apply plugin: "java"
-    apply plugin: "architectury-plugin"
+    apply plugin: 'java'
+    apply plugin: 'architectury-plugin'
 
     base {
         archivesName = rootProject.mod_name
     }
 
-    version = rootProject.mod_version
+    version = "${rootProject.mod_version}-${project.name}"
     group = rootProject.mod_group
 
     repositories {
+        maven {
+            name = 'NeoForged Maven'
+            url = 'https://maven.neoforged.net/releases/'
+        }
         maven {
             name 'Xander Maven'
             url 'https://maven.isxander.dev/releases'
@@ -40,6 +64,7 @@ allprojects {
             name 'TerraformersMC Maven'
             url 'https://maven.terraformersmc.com/releases'
         }
+        mavenCentral()
     }
 
     java {
@@ -50,5 +75,11 @@ allprojects {
     compileJava {
         options.release = 17
         options.encoding = 'UTF-8'
+    }
+
+    processResources {
+        filesMatching(['fabric.mod.json', 'META-INF/mods.toml', 'META-INF/*.mods.toml']) {
+            expand 'version': project.version
+        }
     }
 }

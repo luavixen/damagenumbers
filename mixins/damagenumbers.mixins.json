@@ -1,0 +1,12 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "compatibilityLevel": "JAVA_17",
+    "package": "dev.foxgirl.damagenumbers.mixin",
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "client": [
+        "MixinLivingEntity"
+    ]
+}

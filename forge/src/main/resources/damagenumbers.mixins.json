@@ -1,11 +1,1 @@
-{
-    "required": true,
-    "compatibilityLevel": "JAVA_17",
-    "package": "dev.foxgirl.damagenumbers.mixin",
-    "injectors": {
-        "defaultRequire": 1
-    },
-    "client": [
-        "MixinLivingEntity"
-    ]
-}
+../../../../mixins/damagenumbers.mixins.json

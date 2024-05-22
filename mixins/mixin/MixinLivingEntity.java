@@ -15,7 +15,7 @@ public abstract class MixinLivingEntity {
     private float previousHealth = 0.0F;
 
     @Inject(method = "tick()V", at = @At("TAIL"))
-    private void onTick(CallbackInfo info) {
+    private void injected$tick(CallbackInfo info) {
         var entity = (LivingEntity) (Object) this;
 
         var world = entity.getWorld();

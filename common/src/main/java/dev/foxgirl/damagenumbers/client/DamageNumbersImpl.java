@@ -10,6 +10,8 @@ import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public final class DamageNumbersImpl implements DamageNumbersHandler, Config.PathProvider {
 
@@ -52,6 +54,8 @@ public final class DamageNumbersImpl implements DamageNumbersHandler, Config.Pat
         );
     }
 
+    private final Deque<TextParticle> particles = new ArrayDeque<>();
+
     public void onEntityHealthChange(@NotNull LivingEntity entity, float oldHealth, float newHealth) {
         if (!config.isEnabled) return;
 
@@ -64,6 +68,18 @@ public final class DamageNumbersImpl implements DamageNumbersHandler, Config.Pat
 
         var world = client.world;
         if (world == null || world != entity.getWorld()) return;
+
+        if (entity.squaredDistanceTo(client.player) > 2304.0) return;
+
+        int particleLimit = switch (client.options.getParticles().getValue()) {
+            case ALL -> 256;
+            case DECREASED -> 64;
+            case MINIMAL -> 16;
+        };
+        while (particles.size() >= particleLimit) {
+            var particle = particles.poll();
+            if (particle != null) particle.markDead();
+        }
 
         Vec3d particlePos = entity.getPos().add(0.0, entity.getHeight() + 0.25, 0.0);
 
@@ -93,6 +109,8 @@ public final class DamageNumbersImpl implements DamageNumbersHandler, Config.Pat
         } else {
             particle.setColor(config.colorSm);
         }
+
+        particles.add(particle);
 
         client.particleManager.addParticle(particle);
     }

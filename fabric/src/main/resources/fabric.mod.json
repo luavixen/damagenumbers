@@ -5,8 +5,8 @@
     "version": "${version}",
 
     "depends": {
-        "java": ">=17",
-        "minecraft": ">=1.19.4",
+        "java": ">=21",
+        "minecraft": ">=1.21",
         "fabricloader": ">=0.14.0"
     },
     "recommends": {

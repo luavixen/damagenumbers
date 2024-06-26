@@ -18,7 +18,7 @@ configurations {
 dependencies {
     neoForge "net.neoforged:neoforge:${project.neoforge_version}"
 
-    modImplementation "dev.isxander.yacl:yet-another-config-lib-neoforge:${rootProject.yacl_neoforge_version}"
+    modImplementation "dev.isxander:yet-another-config-lib:${rootProject.yacl_neoforge_version}"
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowCommon(project(path: ':common', configuration: 'transformProductionFabric')) { transitive false }

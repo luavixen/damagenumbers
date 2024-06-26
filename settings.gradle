@@ -9,8 +9,8 @@ pluginManagement {
             url 'https://files.minecraftforge.net/maven/'
         }
         maven {
-            name = 'NeoForged Maven'
-            url = 'https://maven.neoforged.net/releases/'
+            name 'NeoForged Maven'
+            url 'https://maven.neoforged.net/releases/'
         }
         maven {
             name 'Architectury Maven'
@@ -25,5 +25,5 @@ rootProject.name = 'damagenumbers'
 
 include 'common'
 include 'fabric'
-include 'forge'
+// include 'forge'
 include 'neoforge'

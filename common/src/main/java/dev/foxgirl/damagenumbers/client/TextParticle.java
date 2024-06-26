@@ -5,9 +5,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleTextureSheet;
 import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
@@ -51,18 +49,21 @@ public final class TextParticle extends Particle {
         Matrix4f matrix = new Matrix4f();
         matrix = matrix.translation(particleX, particleY, particleZ);
         matrix = matrix.rotate(camera.getRotation());
-        matrix = matrix.scale(-0.025F, -0.025F, 0.025F);
+        matrix = matrix.rotate((float) Math.PI, 0.0F, 1.0F, 0.0F);
+        matrix = matrix.scale(-0.025F, -0.025F, -0.025F);
 
-        var textRenderer = MinecraftClient.getInstance().textRenderer;
-        var vertexConsumerProvider = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
+        var client = MinecraftClient.getInstance();
+
+        var textRenderer = client.textRenderer;
+        var vertexConsumers = client.getBufferBuilders().getEntityVertexConsumers();
 
         float textX = textRenderer.getWidth(text) / -2.0F;
         float textY = 0.0F;
 
         int textColor = new Color(red, green, blue, alpha).getValue();
 
-        textRenderer.draw(text, textX, textY, textColor, false, matrix, vertexConsumerProvider, TextRenderer.TextLayerType.NORMAL, 0, 0xF000F0);
-        vertexConsumerProvider.draw();
+        textRenderer.draw(text, textX, textY, textColor, false, matrix, vertexConsumers, TextRenderer.TextLayerType.NORMAL, 0, 0xF000F0);
+        vertexConsumers.draw();
     }
 
 }
